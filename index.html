@@ -1,0 +1,197 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Floranifa — Toko Bunga</title>
+  <style>
+    :root{
+      --brown-deep:#5b3a2e;
+      --brown-light:#d9c7bb;
+      --maroon:#6e1f2b;
+      --white:#ffffff;
+      --accent:#f4b66a;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,var(--white),#fffaf7);color:var(--brown-deep)}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:linear-gradient(90deg,var(--brown-light),#fff);position:sticky;top:0;z-index:50}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--maroon),var(--brown-deep));display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:18px}
+    .hero{display:grid;grid-template-columns:1fr 380px;gap:22px;padding:22px}
+    .slider{border-radius:14px;overflow:hidden;box-shadow:0 8px 20px rgba(91,58,46,0.12);background:var(--white)}
+    .slides{display:flex;transition:transform .6s cubic-bezier(.2,.9,.3,1)}
+    .slides img{width:100%;height:420px;object-fit:cover}
+    .slide-indicators{position:absolute;left:16px;bottom:16px;display:flex;gap:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.6);border:2px solid rgba(0,0,0,0.06);cursor:pointer}
+    .dot.active{background:var(--maroon)}
+    .hero-info{padding:18px;background:linear-gradient(180deg,#fff, #fff6f2);border-radius:12px;box-shadow:0 8px 24px rgba(91,58,46,0.06)}
+    .btn{padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--maroon);color:var(--white)}
+    .gallery{padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .card{background:var(--white);border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(91,58,46,0.08);transition:transform .25s}
+    .card:hover{transform:translateY(-6px)}
+    .card img{width:100%;height:200px;object-fit:cover;border-radius:10px}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .price{font-weight:800;color:var(--maroon)}
+    .tag{font-size:12px;padding:6px 8px;border-radius:999px;background:var(--brown-light);color:var(--brown-deep)}
+    .cart-floating{position:fixed;right:18px;bottom:18px;background:linear-gradient(180deg,var(--white),#fff);border-radius:14px;padding:12px;width:320px;box-shadow:0 18px 42px rgba(91,58,46,0.18)}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:120}
+    .modal.open{display:flex}
+    .modal-content{width:min(900px,96%);background:var(--white);border-radius:12px;overflow:hidden}
+    .modal-content img{width:100%;height:520px;object-fit:cover}
+    @media (max-width:880px){ .hero{grid-template-columns:1fr} .slides img{height:320px} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">FN</div>
+      <div>
+        <h1 style="margin:0">Floranifa</h1>
+        <div style="font-size:13px;color:#6b5a54">Bucket & Bouquet — handcrafted by Naifa Ghaisani</div>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="#gallery" style="margin-right:8px">Produk</a>
+      <a class="btn" href="#contact">Kontak</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div style="position:relative">
+        <div class="slider" id="slider">
+          <div class="slides" id="slides">
+            <img src="assets/bouquet1.jpg" alt="Bouquet 1" data-title="Sunshine Bouquet">
+            <img src="assets/bouquet2.jpg" alt="Bouquet 2" data-title="Soft Pastel Bouquet">
+          </div>
+          <div class="slide-indicators" id="indicators"></div>
+        </div>
+      </div>
+
+      <aside class="hero-info">
+        <h2 style="margin-top:0">Fresh bouquets, crafted with love</h2>
+        <p style="margin:0 0 12px 0;color:#6b5a54">Floranifa menyajikan buket bunga segar dengan wrapping elegan — nuansa coklat susu, putih, dan marun. Cocok untuk kado, acara, atau dekorasi rumah.</p>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-primary" id="shopNow">Pesan Sekarang</button>
+          <button class="btn" id="waQuick">Chat via WhatsApp</button>
+        </div>
+        <div id="contact" style="margin-top:12px;font-size:13px;color:#6b5a54">
+          <strong style="color:var(--maroon)">COD tersedia</strong> • Custom bouquet? Chat WA untuk request warna & kartu ucapan.
+        </div>
+      </aside>
+    </section>
+
+    <section class="gallery" id="gallery">
+      <!-- product cards injected by JS -->
+    </section>
+  </main>
+
+  <div class="cart-floating" id="cart">
+    <h4 style="margin:0 0 8px 0">Keranjang</h4>
+    <div id="cartItems"><div style="color:#7a6a64">Keranjang kosong</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+      <div style="font-weight:800;color:var(--maroon)" id="total">Rp0</div>
+      <button class="btn btn-primary" id="checkoutBtn">Checkout</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <img src="" alt="preview">
+    </div>
+  </div>
+
+  <footer style="padding:18px;text-align:center;color:#6b5a54">
+    © 2025 Floranifa • Handmade bouquets by Naifa Ghaisani
+  </footer>
+
+  <script>
+    const products = [
+      {id:1, title:'Sunshine Bucket', price:120000, img:'assets/bouquet1.jpg', desc:'Sunflower & rose mix; ceria & hangat.'},
+      {id:2, title:'Soft Pastel Bucket', price:140000, img:'assets/bouquet2.jpg', desc:'Tone pastel lembut; elegan & manis.'},
+      {id:3, title:'Elegance Mini', price:85000, img:'assets/bouquet2.jpg', desc:'Kombinasi bunga kecil, cocok utk ucapan.'},
+      {id:4, title:'Sun-kissed Duo', price:155000, img:'assets/bouquet1.jpg', desc:'Varian premium dengan wrapping eksklusif.'}
+    ];
+
+    function formatPrice(v){ return 'Rp' + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+
+    const gallery = document.getElementById('gallery');
+    products.forEach(p=>{
+      const card = document.createElement('article');
+      card.className='card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.title}" onclick="openModal('${p.img}')">
+        <h3 style="margin:10px 0 6px 0">${p.title}</h3>
+        <div style="color:#6b5a54;font-size:13px">${p.desc}</div>
+        <div class="meta"><div class="tag">Buket</div><div class="price">${formatPrice(p.price)}</div></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" onclick="addToCart(${p.id})" style="border:2px solid var(--brown-deep)">Tambah</button>
+          <button class="btn btn-primary" onclick="buyNow(${p.id})">Beli Sekarang</button>
+        </div>
+      `;
+      gallery.appendChild(card);
+    });
+
+    // slider
+    const slides = document.getElementById('slides');
+    const indicators = document.getElementById('indicators');
+    const imgs = slides.querySelectorAll('img');
+    let idx=0;
+    imgs.forEach((_,i)=>{
+      const d = document.createElement('div'); d.className='dot'+(i===0?' active':''); d.addEventListener('click',()=>{goTo(i)}); indicators.appendChild(d);
+    });
+    function goTo(i){ idx=i; slides.style.transform = `translateX(${-i*100}%)`; updateDots(); }
+    function updateDots(){ indicators.querySelectorAll('.dot').forEach((el,i)=>el.classList.toggle('active', i===idx)); }
+    let sliderInterval = setInterval(()=>{ idx=(idx+1)%imgs.length; goTo(idx); },4500);
+    document.getElementById('slider').addEventListener('mouseenter',()=>clearInterval(sliderInterval));
+    document.getElementById('slider').addEventListener('mouseleave',()=>sliderInterval = setInterval(()=>{ idx=(idx+1)%imgs.length; goTo(idx); },4500));
+
+    // modal
+    const modal = document.getElementById('modal');
+    const modalImg = modal.querySelector('img');
+    function openModal(src){ modalImg.src = src; modal.classList.add('open'); }
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('open'); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.classList.remove('open'); });
+
+    // cart
+    const cartItemsEl = document.getElementById('cartItems');
+    const totalEl = document.getElementById('total');
+    let cart = [];
+    function addToCart(id){ const p = products.find(x=>x.id===id); const existing = cart.find(x=>x.id===id); if(existing) existing.qty++; else cart.push({id:p.id,title:p.title,price:p.price,qty:1}); renderCart(); }
+    function buyNow(id){ addToCart(id); const p = products.find(x=>x.id===id); const url = "https://wa.me/WHATSAPP_NUMBER?text=" + encodeURIComponent('Halo Floranifa! Saya ingin pesan: ' + p.title + ' (Qty: 1).'); window.open(url.replace('WHATSAPP_NUMBER', 'REPLACE_ME'), '_blank'); }
+    function renderCart(){ cartItemsEl.innerHTML=''; if(cart.length===0){ cartItemsEl.innerHTML='<div style="color:#7a6a64">Keranjang kosong</div>'; totalEl.textContent='Rp0'; return; } let total=0; cart.forEach(it=>{ total+=it.price*it.qty; const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.marginBottom='8px'; row.innerHTML = `<div><strong>${it.title}</strong><div style="font-size:13px;color:#6b5a54">${formatPrice(it.price)} x ${it.qty}</div></div><div style="text-align:right"><button style="background:transparent;border:0;color:var(--maroon);cursor:pointer;font-weight:700" onclick="removeOne(${it.id})">-</button> <button style="background:transparent;border:0;color:var(--maroon);cursor:pointer;font-weight:700" onclick="addToCart(${it.id})">+</button></div>`; cartItemsEl.appendChild(row); }); totalEl.textContent = formatPrice(total); }
+
+    function removeOne(id){ const idx = cart.findIndex(x=>x.id===id); if(idx>-1){ cart[idx].qty--; if(cart[idx].qty<=0) cart.splice(idx,1); renderCart(); } }
+
+    document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+      if(cart.length===0){ alert('Keranjang kosong. Pilih produk dulu ya!'); return; }
+      const names = cart.map(i=>`${i.title} (x${i.qty})`).join(', ');
+      const total = totalEl.textContent;
+      const waText = `Halo Floranifa! Saya ingin pesan: ${names}. Total: ${total}. Nama: . Alamat: .`;
+      const waUrl = "https://wa.me/WHATSAPP_NUMBER?text=" + encodeURIComponent(waText);
+      window.open(waUrl.replace('WHATSAPP_NUMBER', 'REPLACE_ME'), '_blank');
+    });
+
+    // quick WA button
+    document.getElementById('waQuick').addEventListener('click', ()=> {
+      const url = "https://wa.me/WHATSAPP_NUMBER?text=" + encodeURIComponent('Halo Floranifa! Saya ingin tahu pilihan buket dan harga.');
+      window.open(url.replace('WHATSAPP_NUMBER', 'REPLACE_ME'), '_blank');
+    });
+
+    // replace placeholders with actual number
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const nodes = document.querySelectorAll('script, *');
+    });
+
+    // scroll to gallery
+    document.getElementById('shopNow').addEventListener('click', ()=>{ document.getElementById('gallery').scrollIntoView({behavior:'smooth'}); });
+
+    // Replace 'REPLACE_ME' with actual number in runtime (works for these generated links)
+    (function replaceNumberOnLinks(){ const real = '6283170958818'; document.body.innerHTML = document.body.innerHTML.replace(/REPLACE_ME/g, real); })();
+
+  </script>
+</body>
+</html>
